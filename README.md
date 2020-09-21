@@ -2,13 +2,15 @@
 This is a simple script to help developing email templates. It is basically an easy to use abstraction of nodemailer. It currently supports sending html with embedded images.
 
 # Instalation
-Install it using
+Install it using \
 `npm install -g js-mail-sender`
+or\
+`npm install js-mail-sender`
 
 # Usage
 
 ## Environment variables
-This package uses dotenv to set environment variables. You must create a file called `.env` and set the variables:
+This package uses dotenv to set environment variables. You must create a file called `.env` in the root folder  and set the variables:
 
 - EMAIL_USERNAME: The username for smtp authentication
 - EMAIL_PASSWORD: The password for smtp authentication
@@ -28,6 +30,8 @@ EMAIL_TO=example@gmail.com
 EMAIL_FROM=example@gmail.com
 EMAIL_SUBJECT="My subject"
 ```
+
+Note: if you install it globally, you'll have to create de `.env` file in the js-mail-sender's folder in the global node_modules.
 
 ## Html
 After setting the environment variables you'll need an html file. Run the code below to use it:

@@ -1,6 +1,6 @@
 {
   "name": "js-mail-sender",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "A little script for development of email templates.",
   "main": "index.js",
   "scripts": {
