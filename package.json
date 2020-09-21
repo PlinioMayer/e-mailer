@@ -1,13 +1,13 @@
 {
   "name": "js-mail-sender",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "A little script for development of email templates.",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "js-mail-sender": "src/index.js"
+    "js-mail-sender": "index.js"
   },
   "repository": {
     "type": "git",
