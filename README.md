@@ -2,8 +2,8 @@
 This is a simple script to help developing email templates. It is basically an easy to use abstraction of nodemailer. It currently supports sending html with embedded images.
 
 # Instalation
-Install it using \
-`npm install -g js-mail-sender`
+Install it using:\
+`npm install -g js-mail-sender`\
 or\
 `npm install js-mail-sender`
 
