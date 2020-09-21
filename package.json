@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "js-mail-sender": "node index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/PlinioMayer/js-mail-sender.git"
