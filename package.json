@@ -1,0 +1,31 @@
+{
+  "name": "js-mail-sender",
+  "version": "1.0.0",
+  "description": "A little script for development of email templates.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PlinioMayer/js-mail-sender.git"
+  },
+  "keywords": [
+    "email",
+    "js",
+    "nodemailer"
+  ],
+  "author": "PlinioMayer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PlinioMayer/js-mail-sender/issues"
+  },
+  "homepage": "https://github.com/PlinioMayer/js-mail-sender#readme",
+  "devDependencies": {
+    "eslint": "^7.9.0"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "nodemailer": "^6.4.11"
+  }
+}
