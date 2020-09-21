@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 require('dotenv').config()
 const nodemailer = require('nodemailer')
 const { parse } = require('node-html-parser')
