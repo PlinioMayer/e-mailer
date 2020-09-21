@@ -1,5 +1,6 @@
 require('dotenv').config()
 const nodemailer = require('nodemailer')
+const { parse } = require('node-html-parser')
 const fs = require('fs')
 
 if (!process.env.EMAIL_USERNAME) {
@@ -44,10 +45,23 @@ fs.readFile('./' + process.argv[2], function (err, data) {
   if (err) {
     console.log(err)
   } else {
-    mailOptions.html = data.toString()
+    const html = parse(data.toString())
+    const attachments = []
+
+    html.querySelectorAll('img').forEach((elem, index) => {
+      const src = elem.getAttribute('src').split('/')
+      elem.setAttribute('src', 'cid:img' + index)
+      attachments.push({
+        filename: src[src.length - 1],
+        path: src.slice(0, src.length).join('/'),
+        cid: 'img' + index
+      })
+    })
+
+    mailOptions.html = html.toString()
+    mailOptions.attachments = attachments
 
     transporter.sendMail(mailOptions, function (err, info) {
-      console.log(mailOptions)
       if(err)
         console.log(err)
       else
