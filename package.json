@@ -1,6 +1,6 @@
 {
-  "name": "js-mail-sender",
-  "version": "1.0.10",
+  "name": "e-mailer",
+  "version": "1.0.0",
   "description": "A little script for development of email templates.",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PlinioMayer/js-mail-sender.git"
+    "url": "git+https://github.com/PlinioMayer/e-mailer.git"
   },
   "keywords": [
     "email",
@@ -21,9 +21,9 @@
   "author": "PlinioMayer",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/PlinioMayer/js-mail-sender/issues"
+    "url": "https://github.com/PlinioMayer/e-mailer/issues"
   },
-  "homepage": "https://github.com/PlinioMayer/js-mail-sender#readme",
+  "homepage": "https://github.com/PlinioMayer/e-mailer#readme",
   "devDependencies": {
     "eslint": "^7.9.0"
   },
