@@ -1,5 +1,5 @@
 {
-  "name": "e-mailer",
+  "name": "@plinio_mayer/e-mailer",
   "version": "1.0.0",
   "description": "A little script for development of email templates.",
   "main": "index.js",
