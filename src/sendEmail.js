@@ -6,7 +6,7 @@ const axios = require('axios')
 function sendEmail (obj) {
   const transporter = nodemailer.createTransport({
     host: obj.emailHost,
-    secure: false,
+    secure: obj.emailSecure,
     auth: {
       user: obj.emailUsername,
       pass: obj.emailPassword

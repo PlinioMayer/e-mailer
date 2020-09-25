@@ -5,6 +5,7 @@ const readlineSync = require('readline-sync')
 const sendEmail = require('./src/sendEmail')
 
 function getEmailUsername () {
+  console.clear()
   let username = readlineSync.question('Email username: ')
 
   while (!username) {
@@ -17,6 +18,7 @@ function getEmailUsername () {
 }
 
 function getEmailPassword () {
+  console.clear()
   let password = readlineSync.question('Email password: ', {
     hideEchoBack: true
   })
@@ -29,45 +31,35 @@ function getEmailPassword () {
     })
   }
 
-  console.clear()
-
-  let confirmPassword = readlineSync.question('Confirm email password: ', {
-    hideEchoBack: true
-  })
-
-  while (!confirmPassword || confirmPassword !== password) {
-    if (!confirmPassword) {
-      console.clear()
-      console.log('Email password confirmation can\'t be blank')
-      confirmPassword = readlineSync.question('Confirm email password: ', {
-        hideEchoBack: true
-      })
-    } else {
-      console.clear()
-      console.log('Email password confirmation doesn\'t match password')
-      confirmPassword = readlineSync.question('Confirm email password: ', {
-        hideEchoBack: true
-      })
-    }
-  }
-
   return password
 }
 
 function getEmailHost () {
+  console.clear()
   let host = readlineSync.question('Email host (default: smtp.gmail.com): ')
 
   return host ? host : 'smtp.gmail.com'
+}
+
+function getEmailSecure () {
+  console.clear()
+  let secure = readlineSync.question('Email uses TLS (y/n) (default: n): ')
+
+  while ((secure !== 'y' || secure !== 'Y') && secure && (secure !== 'n' || secure !== 'N')) {
+    console.clear()
+    console.log('Use \'y\' or \'n\', default \'n\'')
+    secure = readlineSync.question('Email uses TLS (y/n) (default: n): ')
+  }
+
+  return secure ? (secure === 'y' || secure === 'Y' ? true : false) : false
 }
 
 if (process.argv[2] == '--init') {
   const configObj = {}
 
   configObj.emailUsername = getEmailUsername()
-  console.clear()
-  configObj.emailPassword = getEmailPassword()
-  console.clear()
   configObj.emailHost = getEmailHost()
+  configObj.emailSecure = getEmailSecure()
 
   fs.writeFile('./config.json', JSON.stringify(configObj), () => {
     console.clear()
@@ -109,19 +101,21 @@ if (process.argv[2] == '--init') {
 
       const argsArr = [args.toFlagIndex, args.fromFlagIndex, args.subjectFlagIndex].sort((a, b) => b - a)
 
-      console.log(argsArr)
+      if (process.argv.length < 9) {
+        console.log('You must specify an html htmlFile.')
+        return
+      }
 
       if (argsArr[0] - argsArr[1] > 2) {
         args.htmlFile = process.argv[argsArr[1] + 2]
       } else if (argsArr[1] - argsArr[2] > 2) {
         args.htmlFile = process.argv[argsArr[2] + 2]
       } else {
-        args.htmlFile = process.argv[argsArr[0] + 2]
-      }
-
-      if (!args.htmlFile) {
-        console.log('You must specify an html htmlFile.')
-        return
+        if (process.argv[argsArr[0] + 2]) {
+          args.htmlFile = process.argv[argsArr[0] + 2]
+        } else {
+          args.htmlFile = process.argv[2]
+        }
       }
 
       const obj = {
@@ -129,8 +123,11 @@ if (process.argv[2] == '--init') {
         emailTo: args.toContent,
         emailFrom: args.fromContent,
         emailSubject: args.subjectContent,
+        emailPassword: getEmailPassword(),
         htmlFile: args.htmlFile
       }
+
+      console.clear()
 
       sendEmail(obj)
     }
