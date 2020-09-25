@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer')
 const { parse } = require('node-html-parser')
 const fs = require('fs')
 const axios = require('axios')
+const path = require('path')
 
 function sendEmail (obj) {
   const transporter = nodemailer.createTransport({
@@ -19,7 +20,7 @@ function sendEmail (obj) {
     subject: obj.emailSubject
   }
   
-  fs.readFile('./' + obj.htmlFile, async function (err, data) {
+  fs.readFile(path.resolve(obj.htmlFile), async function (err, data) {
     if (err) {
       console.log(err)
     } else {
@@ -35,7 +36,7 @@ function sendEmail (obj) {
           elem.setAttribute('src', 'cid:img' + attachments.length)
           attachments.push({
             filename: src.split('/')[src.length - 1],
-            path: src,
+            path: path.resolve(obj.htmlFile.split('/').slice(0, obj.htmlFile.split('/').length - 1).join('/'), src),
             cid: 'img' + attachments.length
           })
         }
