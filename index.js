@@ -61,12 +61,12 @@ if (process.argv[2] == '--init') {
   configObj.emailHost = getEmailHost()
   configObj.emailSecure = getEmailSecure()
 
-  fs.writeFile('./config.json', JSON.stringify(configObj), () => {
+  fs.writeFile(__dirname + '/config.json', JSON.stringify(configObj), () => {
     console.clear()
     console.log('E-mailer configured succesfully')
   })
 } else {
-  fs.readFile('./config.json', (err, data) => {
+  fs.readFile(__dirname + '/config.json', (err, data) => {
     if (err) {
       console.log('You must initiate e-mailer before using it')
       console.log('\nRun e-mailer --init')
