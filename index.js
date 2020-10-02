@@ -57,8 +57,8 @@ function getEmailSecure () {
 if (process.argv[2] == '--init') {
   const configObj = {}
 
-  configObj.emailUsername = getEmailUsername()
   configObj.emailHost = getEmailHost()
+  configObj.emailUsername = getEmailUsername()
   configObj.emailSecure = getEmailSecure()
 
   fs.writeFile(__dirname + '/config.json', JSON.stringify(configObj), () => {
