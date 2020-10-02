@@ -20,7 +20,7 @@ After setting the environment variables you'll need an html file. Run the code b
 Use quotes to if you need to send a subject with space.\
 \
 Example:\
-`e-mailer --from my.email@gmail.com --to his.email@gmail.com --sub "The best subject" index.html`
+`e-mailer --from my.email@gmail.com --to his.email@gmail.com --sub "The best subject" index.html`\
 **All the flags must be defined**
 
 ## Images
