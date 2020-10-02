@@ -29,5 +29,5 @@ js-mail-sender will automatically link the images in the imgs tags's srcs. You j
 ## Known bugs
 The currently package to read the console (readline-sync) allows to mask the password, but it cancels any input like backspace or ctrl+c. Unfortunately you'll have to close the terminal if misspell your password or want to terminate de process.
 
-## Feedback
+# Feedback
 E-mail me: pctmayer@gmail.com
