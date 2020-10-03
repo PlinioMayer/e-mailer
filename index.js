@@ -3,13 +3,19 @@
 const fs = require('fs')
 const readlineSync = require('readline-sync')
 const sendEmail = require('./src/sendEmail')
+const readline = require('readline')
+
+function clearConsole () {
+  readline.cursorTo(process.stdout, 0, 0)
+  readline.clearScreenDown(process.stdout)
+} 
 
 function getEmailUsername () {
-  console.clear()
+  clearConsole()
   let username = readlineSync.question('Email username: ')
 
   while (!username) {
-    console.clear()
+    clearConsole()
     console.log('Email username can\'t be blank')
     username = readlineSync.question('Email username: ')
   }
@@ -18,13 +24,13 @@ function getEmailUsername () {
 }
 
 function getEmailPassword () {
-  console.clear()
+  clearConsole()
   let password = readlineSync.question('Email password: ', {
     hideEchoBack: true
   })
 
   while (!password) {
-    console.clear()
+    clearConsole()
     console.log('Email password can\'t be blank')
     password = readlineSync.question('Email password: ', {
       hideEchoBack: true
@@ -35,18 +41,18 @@ function getEmailPassword () {
 }
 
 function getEmailHost () {
-  console.clear()
+  clearConsole()
   let host = readlineSync.question('Email host (default: smtp.gmail.com): ')
 
   return host ? host : 'smtp.gmail.com'
 }
 
 function getEmailSecure () {
-  console.clear()
+  clearConsole()
   let secure = readlineSync.question('Email uses TLS (y/n) (default: n): ')
 
   while ((secure !== 'y' || secure !== 'Y') && secure && (secure !== 'n' || secure !== 'N')) {
-    console.clear()
+    clearConsole()
     console.log('Use \'y\' or \'n\', default \'n\'')
     secure = readlineSync.question('Email uses TLS (y/n) (default: n): ')
   }
@@ -62,7 +68,7 @@ if (process.argv[2] == '--init') {
   configObj.emailSecure = getEmailSecure()
 
   fs.writeFile(__dirname + '/config.json', JSON.stringify(configObj), () => {
-    console.clear()
+    clearConsole()
     console.log('E-mailer configured succesfully')
   })
 } else {
@@ -127,7 +133,7 @@ if (process.argv[2] == '--init') {
         htmlFile: args.htmlFile
       }
 
-      console.clear()
+      clearConsole()
 
       sendEmail(obj)
     }
