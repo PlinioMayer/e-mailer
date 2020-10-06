@@ -24,7 +24,7 @@ Example:\
 **All the flags must be defined**
 
 ## Images
-js-mail-sender will automatically link the images in the imgs tags's srcs. You just need to make sure the html can be opened in the browser and the images are shown correctly.
+e-mailer will automatically link the images in the imgs tags's srcs. You just need to make sure the html can be opened in the browser and the images are shown correctly.
 
 ## Known bugs
 The currently package to read the console (readline-sync) allows to mask the password, but it cancels any input like backspace or ctrl+c. Unfortunately you'll have to close the terminal if misspell your password or want to terminate de process.

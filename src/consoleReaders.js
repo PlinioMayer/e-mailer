@@ -58,7 +58,7 @@ module.exports = {
     clearConsole()
     console.log('You can save your password so you won\'t need to type every time you send an email.')
     console.log('The password will be saved directly in the config.json file. Use at your own risk.')
-    console.log('Leave blank to skip.')
+    console.log('Leave blank to skip.\n')
 
     let password = readlineSync.question('Email password: ', {
       hideEchoBack: true
@@ -88,7 +88,7 @@ module.exports = {
     console.log('You can save a default email to be used as sender.')
     console.log('You can override this passing the flag \'--from\'.')
     console.log('If no default sender is configured and no \'--from\' flag is passed, the email username will be used.')
-    console.log('Leave blank to skip.')
+    console.log('Leave blank to skip.\n')
     let from = readlineSync.question('Default email \'from\': ')
   
     return from ? from : false
@@ -98,7 +98,7 @@ module.exports = {
     console.log('You can save a default email to be used as receiver.')
     console.log('You can override this passing the flag \'--to\'.')
     console.log('If you don\'t specify a default receiver and don\'t pass a \'--to\' flag, an error will be thrown.')
-    console.log('Leave blank to skip.')
+    console.log('Leave blank to skip.\n')
     let to = readlineSync.question('Default email \'to\': ')
   
     return to ? to : false
@@ -108,7 +108,7 @@ module.exports = {
     console.log('You can save a default email subject.')
     console.log('You can override this passing the flag \'--sub\'.')
     console.log('If you don\'t specify a default subject and don\'t pass a \'--sub\' flag, an error will be thrown.')
-    console.log('Leave blank to skip.')
+    console.log('Leave blank to skip.\n')
     let sub = readlineSync.question('Default email subject: ')
   
     return sub ? sub : false
