@@ -16,12 +16,12 @@ It'll prompt some questions about the host configurations. If you need to change
 
 ## Send the email
 After setting the environment variables you'll need an html file. Run the code below to use it:\
-`e-mailer --from < sender-email > --to < receiver-email > --sub < email-subject > < your-html-file-path >`\
+```e-mailer --from < sender-email > --to < receiver-email > --sub < email-subject > < your-html-file-path >```\
 Use quotes to if you need to send a subject with space.\
 \
+\
 Example:\
-`e-mailer --from my.email@gmail.com --to his.email@gmail.com --sub "The best subject" index.html`\
-**All the flags must be defined**
+```e-mailer --from my.email@gmail.com --to his.email@gmail.com --sub "The best subject" index.html```\
 
 ## Images
 e-mailer will automatically link the images in the imgs tags's srcs. You just need to make sure the html can be opened in the browser and the images are shown correctly.
