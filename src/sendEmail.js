@@ -3,6 +3,13 @@ const { parse } = require('node-html-parser')
 const fs = require('fs')
 const axios = require('axios')
 const path = require('path')
+const { clearConsole } = require('./consoleReaders')
+
+function updateLoading (percentage, message) {
+  clearConsole()
+  console.log(percentage)
+  console.log(message)
+}
 
 function sendEmail (obj) {
   const transporter = nodemailer.createTransport({
@@ -19,11 +26,15 @@ function sendEmail (obj) {
     to: obj.emailTo,
     subject: obj.emailSubject
   }
+
+  updateLoading('1/3', 'Reading ' + obj.htmlFile)
   
   fs.readFile(path.resolve(obj.htmlFile), async function (err, data) {
     if (err) {
       console.log(err)
     } else {
+      updateLoading('2/3', 'Parsing html')
+
       const html = parse(data.toString())
       const attachments = []
   
@@ -44,12 +55,17 @@ function sendEmail (obj) {
   
       mailOptions.html = html.toString()
       mailOptions.attachments = attachments
-  
+
+      updateLoading('3/3', 'Sending email')
+
       transporter.sendMail(mailOptions, function (err, info) {
-        if(err)
+        if (err) {
+          clearConsole()
           console.log(err)
-        else
+        } else {
+          clearConsole()
           console.log(info)
+        } 
       })
     }
   })

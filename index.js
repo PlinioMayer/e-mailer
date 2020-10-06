@@ -1,64 +1,17 @@
 #!/usr/bin/env node
-
 const fs = require('fs')
-const readlineSync = require('readline-sync')
 const sendEmail = require('./src/sendEmail')
-const readline = require('readline')
-
-function clearConsole () {
-  readline.cursorTo(process.stdout, 0, 0)
-  readline.clearScreenDown(process.stdout)
-} 
-
-function getEmailUsername () {
-  clearConsole()
-  let username = readlineSync.question('Email username: ')
-
-  while (!username) {
-    clearConsole()
-    console.log('Email username can\'t be blank')
-    username = readlineSync.question('Email username: ')
-  }
-
-  return username
-}
-
-function getEmailPassword () {
-  clearConsole()
-  let password = readlineSync.question('Email password: ', {
-    hideEchoBack: true
-  })
-
-  while (!password) {
-    clearConsole()
-    console.log('Email password can\'t be blank')
-    password = readlineSync.question('Email password: ', {
-      hideEchoBack: true
-    })
-  }
-
-  return password
-}
-
-function getEmailHost () {
-  clearConsole()
-  let host = readlineSync.question('Email host (default: smtp.gmail.com): ')
-
-  return host ? host : 'smtp.gmail.com'
-}
-
-function getEmailSecure () {
-  clearConsole()
-  let secure = readlineSync.question('Email uses TLS (y/n) (default: n): ')
-
-  while ((secure !== 'y' || secure !== 'Y') && secure && (secure !== 'n' || secure !== 'N')) {
-    clearConsole()
-    console.log('Use \'y\' or \'n\', default \'n\'')
-    secure = readlineSync.question('Email uses TLS (y/n) (default: n): ')
-  }
-
-  return secure ? (secure === 'y' || secure === 'Y' ? true : false) : false
-}
+const {
+  clearConsole,
+  getEmailHost,
+  getEmailUsername,
+  getEmailSecure,
+  getEmailPassword,
+  getSaveEmailPassword,
+  getDefaultEmailFrom,
+  getDefaultEmailTo,
+  getDefaultEmailSubject
+} = require('./src/consoleReaders')
 
 if (process.argv[2] == '--init') {
   const configObj = {}
@@ -66,6 +19,29 @@ if (process.argv[2] == '--init') {
   configObj.emailHost = getEmailHost()
   configObj.emailUsername = getEmailUsername()
   configObj.emailSecure = getEmailSecure()
+  const password = getSaveEmailPassword()
+
+  if (password) {
+    configObj.emailPassword = password
+  }
+
+  const from = getDefaultEmailFrom()
+
+  if (from) {
+    configObj.emailFrom = from
+  }
+
+  const to = getDefaultEmailTo()
+
+  if (to) {
+    configObj.emailTo = to
+  }
+
+  const sub = getDefaultEmailSubject()
+
+  if (sub) {
+    configObj.emailSubject = sub
+  }
 
   fs.writeFile(__dirname + '/config.json', JSON.stringify(configObj), () => {
     clearConsole()
@@ -77,65 +53,82 @@ if (process.argv[2] == '--init') {
       console.log('You must initiate e-mailer before using it')
       console.log('\nRun e-mailer --init')
     } else {
+      const configs = JSON.parse(data)
       const args = {}
+      let flagsCount = 0
+
       args.toFlagIndex = process.argv.indexOf('--to')
       args.toContent = process.argv[process.argv.indexOf('--to') + 1]
 
       if (args.toFlagIndex < 0 || !args.toContent) {
-        console.log('You must pass a email to be sent to.')
-        console.log('Use the \'--to\' flag to do so.')
-        return
+        if (!configs.emailTo) {
+          console.log('You must pass a email to be sent to.')
+          console.log('Use the \'--to\' flag to do so.')
+          return
+        }
+      } else {
+        flagsCount++
+        configs.emailTo = args.toContent
       }
 
       args.fromFlagIndex = process.argv.indexOf('--from')
       args.fromContent = process.argv[process.argv.indexOf('--from') + 1]
 
       if (args.fromFlagIndex < 0 || !args.fromContent) {
-        console.log('You must pass a email to be sent from.')
-        console.log('Use the \'--from\' flag to do so.')
-        return
+        if (!configs.emailFrom) {
+          configs.emailFrom = configs.emailUsername
+        }
+      } else {
+        flagsCount++
+        configs.emailFrom = args.fromContent
       }
 
       args.subjectFlagIndex = process.argv.indexOf('--sub')
       args.subjectContent = process.argv[process.argv.indexOf('--sub') + 1]
 
       if (args.subjectFlagIndex < 0 || !args.subjectContent) {
-        console.log('You must pass a subject for the email.')
-        console.log('Use the \'--sub\' flag to do so.')
-        return
+        if (!configs.emailSubject) {
+          console.log('You must pass a subject for the email.')
+          console.log('Use the \'--sub\' flag to do so.')
+          return
+        }
+      } else {
+        flagsCount++
+        configs.emailSubject = args.subjectContent
       }
 
-      const argsArr = [args.toFlagIndex, args.fromFlagIndex, args.subjectFlagIndex].sort((a, b) => b - a)
+      const argsArr = [args.toFlagIndex, args.fromFlagIndex, args.subjectFlagIndex].filter(elem => elem !== -1).sort((a, b) => b - a)
 
-      if (process.argv.length < 9) {
+      if (process.argv.length < (3 + (2 * flagsCount))) {
         console.log('You must specify an html htmlFile.')
         return
       }
 
-      if (argsArr[0] - argsArr[1] > 2) {
-        args.htmlFile = process.argv[argsArr[1] + 2]
-      } else if (argsArr[1] - argsArr[2] > 2) {
-        args.htmlFile = process.argv[argsArr[2] + 2]
+      if (!argsArr.length) {
+        configs.htmlFile = process.argv[2]
       } else {
-        if (process.argv[argsArr[0] + 2]) {
-          args.htmlFile = process.argv[argsArr[0] + 2]
-        } else {
-          args.htmlFile = process.argv[2]
+        argsArr.slice(0, argsArr.length - 1).forEach((elem, index) => {
+          if (argsArr[index] - argsArr[index + 1] > 2) {
+            configs.htmlFile = process.argv[argsArr[index + 1] + 2]
+          }
+        })
+  
+        if (!configs.htmlFile) {
+          if (process.argv[argsArr[0] + 2]) {
+            configs.htmlFile = process.argv[argsArr[0] + 2]
+          } else {
+            configs.htmlFile = process.argv[2]
+          }
         }
       }
 
-      const obj = {
-        ...JSON.parse(data),
-        emailTo: args.toContent,
-        emailFrom: args.fromContent,
-        emailSubject: args.subjectContent,
-        emailPassword: getEmailPassword(),
-        htmlFile: args.htmlFile
+      if (!configs.emailPassword) {
+        configs.emailPassword = getEmailPassword()
       }
 
       clearConsole()
 
-      sendEmail(obj)
+      sendEmail(configs)
     }
   })
 }
