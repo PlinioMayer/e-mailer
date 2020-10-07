@@ -17,8 +17,8 @@ It'll prompt some questions about the host configurations. If you need to change
 ## Send the email
 After setting the environment variables you'll need an html file. Run the code below to use it:<br/>
 ```e-mailer --from < sender-email > --to < receiver-email > --sub < email-subject > < your-html-file-path >```<br/>
-**Use quotes to if you need to send a subject with space.**<br/>
-**Don't use backslash (\\) for html file path, use always slashes (/)**
+\*\*\***Use quotes if you need to send a subject with spaces**<br/>
+\*\*\***Don't use backslash (\\) for html file path, use always slashes (/)**
 <br/>
 
 Example:<br/>
