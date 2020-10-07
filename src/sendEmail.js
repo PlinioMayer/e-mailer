@@ -1,7 +1,6 @@
 const nodemailer = require('nodemailer')
 const { parse } = require('node-html-parser')
 const fs = require('fs')
-const axios = require('axios')
 const path = require('path')
 const { clearConsole } = require('./consoleReaders')
 
@@ -40,21 +39,29 @@ function sendEmail (obj) {
   
   
       for (const elem of html.querySelectorAll('img')) {
+        const src = elem.getAttribute('src')
         try {
-          await axios.head(elem.getAttribute('src'))
-        } catch {
-          const src = elem.getAttribute('src')
+          const splittedHtmlFile = obj.htmlFile.split('/')
+
+          fs.readFileSync(path.resolve(splittedHtmlFile.slice(0, splittedHtmlFile.length - 1).join('/'), src))
           elem.setAttribute('src', 'cid:img' + attachments.length)
+
+          const splittedSrc = src.split('/')
+
           attachments.push({
-            filename: src.split('/')[src.length - 1],
-            path: path.resolve(obj.htmlFile.split('/').slice(0, obj.htmlFile.split('/').length - 1).join('/'), src),
+            filename: splittedSrc[splittedSrc.length - 1],
+            path: path.resolve(splittedHtmlFile.slice(0, splittedHtmlFile.length - 1).join('/'), src),
             cid: 'img' + attachments.length
           })
+        } catch {
+          //
         }
       }
   
       mailOptions.html = html.toString()
       mailOptions.attachments = attachments
+
+      console.log(attachments)
 
       updateLoading('3/3', 'Sending email')
 

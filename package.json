@@ -1,6 +1,6 @@
 {
   "name": "@plinio_mayer/e-mailer",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A little script for development of email templates.",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,6 @@
     "eslint": "^7.9.0"
   },
   "dependencies": {
-    "axios": "^0.20.0",
     "node-html-parser": "^1.2.20",
     "nodemailer": "^6.4.11",
     "readline-sync": "^1.4.10"
