@@ -61,8 +61,6 @@ function sendEmail (obj) {
       mailOptions.html = html.toString()
       mailOptions.attachments = attachments
 
-      console.log(attachments)
-
       updateLoading('3/3', 'Sending email')
 
       transporter.sendMail(mailOptions, function (err, info) {
