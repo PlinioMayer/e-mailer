@@ -1,8 +1,14 @@
 #!/usr/bin/env node
+const { 
+  fetchLatestPackageVersion,
+  installPackageVersion,
+  respawnProcess
+} = require('@mishguru/selfupdate')
+const pkg = require('./package.json')
 const fs = require('fs')
 const sendEmail = require('./src/sendEmail')
 const {
-  clearConsole,
+  clearLines,
   getEmailHost,
   getEmailUsername,
   getEmailSecure,
@@ -10,15 +16,19 @@ const {
   getSaveEmailPassword,
   getDefaultEmailFrom,
   getDefaultEmailTo,
-  getDefaultEmailSubject
+  getDefaultEmailSubject,
+  getAutoUpdate,
+  getUpdate
 } = require('./src/consoleReaders')
 
 if (process.argv[2] == '--init') {
   const configObj = {}
 
+  configObj.autoUpdate = getAutoUpdate()
   configObj.emailHost = getEmailHost()
   configObj.emailUsername = getEmailUsername()
   configObj.emailSecure = getEmailSecure()
+  
   const password = getSaveEmailPassword()
 
   if (password) {
@@ -44,16 +54,28 @@ if (process.argv[2] == '--init') {
   }
 
   fs.writeFile(__dirname + '/config.json', JSON.stringify(configObj), () => {
-    clearConsole()
     console.log('E-mailer configured succesfully')
   })
 } else {
-  fs.readFile(__dirname + '/config.json', (err, data) => {
+  fs.readFile(__dirname + '/config.json', async (err, data) => {
     if (err) {
       console.log('You must initiate e-mailer before using it')
       console.log('\nRun e-mailer --init')
     } else {
       const configs = JSON.parse(data)
+      
+      if (configs.autoUpdate) {
+        const latestVersion = await fetchLatestPackageVersion(pkg.name)
+
+        if (pkg.version !== latestVersion) {
+          if (getUpdate()) {
+            await installPackageVersion(pkg.name, latestVersion)
+            console.log(`Upgraded from ${pkg.version} to ${latestVersion}. Restarting...`)
+            respawnProcess()
+          }
+        }
+      }
+
       const args = {}
       let flagsCount = 0
 
@@ -124,9 +146,8 @@ if (process.argv[2] == '--init') {
 
       if (!configs.emailPassword) {
         configs.emailPassword = getEmailPassword()
+        clearLines(1)
       }
-
-      clearConsole()
 
       sendEmail(configs)
     }
