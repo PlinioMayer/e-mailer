@@ -113,30 +113,5 @@ module.exports = {
     clearLines(6)
   
     return sub ? sub : false
-  },
-  async getAutoUpdate () {
-    let autoUpdate = await preadline('Would you like to test for updates at start? (y/n) (default: n): ')
-    clearLines(1)
-  
-    while (autoUpdate !== 'y' && autoUpdate !== 'Y' && autoUpdate !== '' && autoUpdate !== 'n' && autoUpdate !== 'N') {
-      console.log('Use \'y\' or \'n\', default \'n\'')
-      autoUpdate = await preadline('Would you like to test for updates at start? (y/n) (default: n): ')
-      clearLines(2)
-    }
-  
-    return autoUpdate ? (autoUpdate === 'y' || autoUpdate === 'Y' ? true : false) : false
-  },
-  async getUpdate (installedVersion, currentVersion) {
-    console.log('Your version is', installedVersion, 'and the current verison is', currentVersion)
-    let update = await preadline('Would you like to update? (y/n) (default: n): ')
-    clearLines(2)
-  
-    while (update !== 'y' && update !== 'Y' && update !== '' && update !== 'n' && update !== 'N') {
-      console.log('Use \'y\' or \'n\', default \'n\'')
-      update = await preadline('Would you like to update? (y/n) (default: n): ')
-      clearLines(2)
-    }
-  
-    return update ? (update === 'y' || update === 'Y' ? true : false) : false
   }
 }

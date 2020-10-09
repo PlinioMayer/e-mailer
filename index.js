@@ -1,10 +1,4 @@
 #!/usr/bin/env node
-const { 
-  fetchLatestPackageVersion,
-  installPackageVersion,
-  respawnProcess
-} = require('@mishguru/selfupdate')
-const pkg = require('./package.json')
 const fs = require('fs')
 const sendEmail = require('./src/sendEmail')
 const {
@@ -16,15 +10,11 @@ const {
   getSaveEmailPassword,
   getDefaultEmailFrom,
   getDefaultEmailTo,
-  getDefaultEmailSubject,
-  getAutoUpdate,
-  getUpdate
+  getDefaultEmailSubject
 } = require('./src/consoleReaders')
 
 async function init () {
   const configObj = {}
-
-  configObj.autoUpdate = await getAutoUpdate()
   configObj.emailHost = await getEmailHost()
   configObj.emailUsername = await getEmailUsername()
   configObj.emailSecure = await getEmailSecure()
@@ -67,18 +57,6 @@ if (process.argv[2] == '--init') {
       console.log('\nRun e-mailer --init')
     } else {
       const configs = JSON.parse(data)
-      
-      if (configs.autoUpdate) {
-        const latestVersion = await fetchLatestPackageVersion(pkg.name)
-
-        if (pkg.version !== latestVersion) {
-          if (await getUpdate(pkg.version, latestVersion)) {
-            await installPackageVersion(pkg.name, latestVersion)
-            console.log(`Upgraded from ${pkg.version} to ${latestVersion}. Restarting...`)
-            respawnProcess()
-          }
-        }
-      }
 
       const args = {}
       let flagsCount = 0
