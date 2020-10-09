@@ -21,15 +21,15 @@ module.exports = {
   
     return username
   },
-  async getEmailPassword () {
-    let password = await preadline('Email password: ', {
+  getEmailPassword () {
+    let password = readlineSync.question('Email password: ', {
       hideEchoBack: true
     })
     clearLines(1)
   
     while (!password) {
       console.log('Email password can\'t be blank')
-      password = await preadline('Email password: ', {
+      password = readlineSync.question('Email password: ', {
         hideEchoBack: true
       })
       clearLines(2)

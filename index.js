@@ -1,8 +1,8 @@
 #!/usr/bin/env node
+const path = require('path')
 const fs = require('fs')
 const sendEmail = require('./src/sendEmail')
 const {
-  clearLines,
   getEmailHost,
   getEmailUsername,
   getEmailSecure,
@@ -43,7 +43,7 @@ async function init () {
     configObj.emailSubject = sub
   }
 
-  fs.writeFile(__dirname + '/config.json', JSON.stringify(configObj), () => {
+  fs.writeFile(path.resolve(__dirname, 'config.json'), JSON.stringify(configObj), () => {
     console.log('E-mailer configured succesfully')
   })
 }
@@ -51,7 +51,7 @@ async function init () {
 if (process.argv[2] == '--init') {
   init()
 } else {
-  fs.readFile(__dirname + '/config.json', async (err, data) => {
+  fs.readFile(path.resolve(__dirname, 'config.json'), async (err, data) => {
     if (err) {
       console.log('You must initiate e-mailer before using it')
       console.log('\nRun e-mailer --init')
@@ -127,8 +127,7 @@ if (process.argv[2] == '--init') {
       }
 
       if (!configs.emailPassword) {
-        configs.emailPassword = getEmailPassword()
-        clearLines(1)
+        configs.emailPassword =  getEmailPassword()
       }
 
       sendEmail(configs)
