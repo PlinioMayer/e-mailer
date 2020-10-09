@@ -26,8 +26,8 @@ async function init () {
 
   configObj.autoUpdate = await getAutoUpdate()
   configObj.emailHost = await getEmailHost()
-  configObj.emailUsername = getEmailUsername()
-  configObj.emailSecure = getEmailSecure()
+  configObj.emailUsername = await getEmailUsername()
+  configObj.emailSecure = await getEmailSecure()
   
   const password = getSaveEmailPassword()
 
@@ -35,19 +35,19 @@ async function init () {
     configObj.emailPassword = password
   }
 
-  const from = getDefaultEmailFrom()
+  const from = await getDefaultEmailFrom()
 
   if (from) {
     configObj.emailFrom = from
   }
 
-  const to = getDefaultEmailTo()
+  const to = await getDefaultEmailTo()
 
   if (to) {
     configObj.emailTo = to
   }
 
-  const sub = getDefaultEmailSubject()
+  const sub = await getDefaultEmailSubject()
 
   if (sub) {
     configObj.emailSubject = sub
@@ -72,7 +72,7 @@ if (process.argv[2] == '--init') {
         const latestVersion = await fetchLatestPackageVersion(pkg.name)
 
         if (pkg.version !== latestVersion) {
-          if (getUpdate()) {
+          if (await getUpdate(pkg.version, latestVersion)) {
             await installPackageVersion(pkg.name, latestVersion)
             console.log(`Upgraded from ${pkg.version} to ${latestVersion}. Restarting...`)
             respawnProcess()
