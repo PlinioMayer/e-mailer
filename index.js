@@ -1,8 +1,14 @@
 #!/usr/bin/env node
+const { 
+  fetchLatestPackageVersion,
+  installPackageVersion,
+  respawnProcess
+} = require('@mishguru/selfupdate')
+const pkg = require('./package.json')
 const fs = require('fs')
 const sendEmail = require('./src/sendEmail')
 const {
-  clearConsole,
+  clearLines,
   getEmailHost,
   getEmailUsername,
   getEmailSecure,
@@ -10,50 +16,70 @@ const {
   getSaveEmailPassword,
   getDefaultEmailFrom,
   getDefaultEmailTo,
-  getDefaultEmailSubject
+  getDefaultEmailSubject,
+  getAutoUpdate,
+  getUpdate
 } = require('./src/consoleReaders')
 
-if (process.argv[2] == '--init') {
+async function init () {
   const configObj = {}
 
-  configObj.emailHost = getEmailHost()
-  configObj.emailUsername = getEmailUsername()
-  configObj.emailSecure = getEmailSecure()
+  configObj.autoUpdate = await getAutoUpdate()
+  configObj.emailHost = await getEmailHost()
+  configObj.emailUsername = await getEmailUsername()
+  configObj.emailSecure = await getEmailSecure()
+  
   const password = getSaveEmailPassword()
 
   if (password) {
     configObj.emailPassword = password
   }
 
-  const from = getDefaultEmailFrom()
+  const from = await getDefaultEmailFrom()
 
   if (from) {
     configObj.emailFrom = from
   }
 
-  const to = getDefaultEmailTo()
+  const to = await getDefaultEmailTo()
 
   if (to) {
     configObj.emailTo = to
   }
 
-  const sub = getDefaultEmailSubject()
+  const sub = await getDefaultEmailSubject()
 
   if (sub) {
     configObj.emailSubject = sub
   }
 
   fs.writeFile(__dirname + '/config.json', JSON.stringify(configObj), () => {
-    clearConsole()
     console.log('E-mailer configured succesfully')
   })
+}
+
+if (process.argv[2] == '--init') {
+  init()
 } else {
-  fs.readFile(__dirname + '/config.json', (err, data) => {
+  fs.readFile(__dirname + '/config.json', async (err, data) => {
     if (err) {
       console.log('You must initiate e-mailer before using it')
       console.log('\nRun e-mailer --init')
     } else {
       const configs = JSON.parse(data)
+      
+      if (configs.autoUpdate) {
+        const latestVersion = await fetchLatestPackageVersion(pkg.name)
+
+        if (pkg.version !== latestVersion) {
+          if (await getUpdate(pkg.version, latestVersion)) {
+            await installPackageVersion(pkg.name, latestVersion)
+            console.log(`Upgraded from ${pkg.version} to ${latestVersion}. Restarting...`)
+            respawnProcess()
+          }
+        }
+      }
+
       const args = {}
       let flagsCount = 0
 
@@ -124,9 +150,8 @@ if (process.argv[2] == '--init') {
 
       if (!configs.emailPassword) {
         configs.emailPassword = getEmailPassword()
+        clearLines(1)
       }
-
-      clearConsole()
 
       sendEmail(configs)
     }

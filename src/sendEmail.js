@@ -2,10 +2,9 @@ const nodemailer = require('nodemailer')
 const { parse } = require('node-html-parser')
 const fs = require('fs')
 const path = require('path')
-const { clearConsole } = require('./consoleReaders')
+const { clearLines } = require('./consoleReaders')
 
 function updateLoading (percentage, message) {
-  clearConsole()
   console.log(percentage)
   console.log(message)
 }
@@ -32,6 +31,7 @@ function sendEmail (obj) {
     if (err) {
       console.log(err)
     } else {
+      clearLines(2)
       updateLoading('2/3', 'Parsing html')
 
       const html = parse(data.toString())
@@ -61,14 +61,15 @@ function sendEmail (obj) {
       mailOptions.html = html.toString()
       mailOptions.attachments = attachments
 
+      clearLines(2)
       updateLoading('3/3', 'Sending email')
 
       transporter.sendMail(mailOptions, function (err, info) {
         if (err) {
-          clearConsole()
+          clearLines(2)
           console.log(err)
         } else {
-          clearConsole()
+          clearLines(2)
           console.log(info)
         } 
       })
