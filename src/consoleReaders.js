@@ -1,5 +1,6 @@
 const readlineSync = require('readline-sync')
 const readline = require('readline')
+const preadline = require('./preadline')
 
 function clearLines (n) {
   readline.moveCursor(process.stdout, 0, -1 * n)
@@ -36,8 +37,8 @@ module.exports = {
   
     return password
   },
-  getEmailHost () {
-    let host = readlineSync.question('Email host (default: smtp.gmail.com): ')
+  async getEmailHost () {
+    let host = await preadline('Email host (default: smtp.gmail.com): ')
     clearLines(1)
   
     return host ? host : 'smtp.gmail.com'
@@ -113,14 +114,15 @@ module.exports = {
   
     return sub ? sub : false
   },
-  getAutoUpdate () {
-    let autoUpdate = readlineSync.question('Would you like to test for updates at start? (y/n) (default: n): ')
+  async getAutoUpdate () {
+    let autoUpdate = await preadline('Would you like to test for updates at start? (y/n) (default: n): ')
     clearLines(1)
   
     while ((autoUpdate !== 'y' || autoUpdate !== 'Y') && autoUpdate !== '' && (autoUpdate !== 'n' || autoUpdate !== 'N')) {
       console.log('Use \'y\' or \'n\', default \'n\'')
-      autoUpdate = readlineSync.question('Would you like to test for updates at start? (y/n) (default: n): ')
+      autoUpdate = await preadline('Would you like to test for updates at start? (y/n) (default: n): ')
       clearLines(2)
+      console.log((autoUpdate !== 'y' || autoUpdate !== 'Y') && autoUpdate !== '' && (autoUpdate !== 'n' || autoUpdate !== 'N'))
     }
   
     return autoUpdate ? (autoUpdate === 'y' || autoUpdate === 'Y' ? true : false) : false

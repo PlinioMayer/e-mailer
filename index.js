@@ -21,11 +21,11 @@ const {
   getUpdate
 } = require('./src/consoleReaders')
 
-if (process.argv[2] == '--init') {
+async function init () {
   const configObj = {}
 
-  configObj.autoUpdate = getAutoUpdate()
-  configObj.emailHost = getEmailHost()
+  configObj.autoUpdate = await getAutoUpdate()
+  configObj.emailHost = await getEmailHost()
   configObj.emailUsername = getEmailUsername()
   configObj.emailSecure = getEmailSecure()
   
@@ -56,6 +56,10 @@ if (process.argv[2] == '--init') {
   fs.writeFile(__dirname + '/config.json', JSON.stringify(configObj), () => {
     console.log('E-mailer configured succesfully')
   })
+}
+
+if (process.argv[2] == '--init') {
+  init()
 } else {
   fs.readFile(__dirname + '/config.json', async (err, data) => {
     if (err) {
