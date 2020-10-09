@@ -46,7 +46,7 @@ module.exports = {
     clearConsole()
     let secure = readlineSync.question('Email uses TLS (y/n) (default: n): ')
   
-    while ((secure !== 'y' || secure !== 'Y') && secure && (secure !== 'n' || secure !== 'N')) {
+    while ((secure !== 'y' || secure !== 'Y') && secure !== '' && (secure !== 'n' || secure !== 'N')) {
       clearConsole()
       console.log('Use \'y\' or \'n\', default \'n\'')
       secure = readlineSync.question('Email uses TLS (y/n) (default: n): ')
